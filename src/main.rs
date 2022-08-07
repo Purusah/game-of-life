@@ -1,4 +1,13 @@
+use clap::Parser;
 use std::{thread, time};
+
+#[derive(Parser)]
+#[clap(about, long_about = None)]
+struct Cli {
+    /// Generation speed in milliseconds
+    #[clap(long, value_parser, value_name = "MILLISECONDS")]
+    speed: Option<u64>,
+}
 
 #[derive(Clone, Copy, PartialEq)]
 enum State {
@@ -103,8 +112,14 @@ fn render(space: &Space) {
 }
 
 fn main() {
-    let mut i = 1;
-    let five_hundred_millisecond = time::Duration::from_millis(500);
+    let args = Cli::parse();
+
+    let speed_milliseconds = args.speed.unwrap_or_default();
+    let five_hundred_millisecond = time::Duration::from_millis(if speed_milliseconds == 0 {
+        500
+    } else {
+        speed_milliseconds
+    });
 
     let mut space: Space = vec![
         vec![State::Dead, State::Alive, State::Dead, State::Dead],
@@ -115,6 +130,7 @@ fn main() {
         vec![State::Dead, State::Dead, State::Dead, State::Dead],
     ];
 
+    let mut i = 1;
     loop {
         i += 1;
 

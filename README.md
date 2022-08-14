@@ -2,12 +2,19 @@
 
 TODO:
 * input board from the terminal
-* random initial state
 * colorful output
 * nicer cells
-* configurable speed
 
 Run
 ```shell
 cargo run
+
+USAGE:
+    learn-rust-game-of-life [OPTIONS]
+
+OPTIONS:
+    -h, --help                    Print help information
+    -r, --random
+        --speed <MILLISECONDS>    Generation speed in milliseconds
+
 ```

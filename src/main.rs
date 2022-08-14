@@ -1,4 +1,5 @@
 use clap::Parser;
+use rand::random;
 use std::{thread, time};
 
 #[derive(Parser)]
@@ -7,6 +8,9 @@ struct Cli {
     /// Generation speed in milliseconds
     #[clap(long, value_parser, value_name = "MILLISECONDS")]
     speed: Option<u64>,
+
+    #[clap(short, long)]
+    random: bool,
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -16,6 +20,30 @@ enum State {
 }
 
 type Space = Vec<Vec<State>>;
+
+fn gen_space(is_random: bool) -> Space {
+    if is_random {
+        // let mut next_space: Space = ;
+        let height = 12;
+        let width = 12;
+        let mut space: Space = vec![vec![State::Dead; width]; height];
+        for r in 0..height {
+            for c in 0..width {
+                space[r][c] = if random() { State::Alive } else { State::Dead };
+            }
+        }
+        return space;
+    }
+
+    return vec![
+        vec![State::Dead, State::Alive, State::Dead, State::Dead],
+        vec![State::Dead, State::Dead, State::Alive, State::Dead],
+        vec![State::Alive, State::Alive, State::Alive, State::Dead],
+        vec![State::Dead, State::Dead, State::Dead, State::Dead],
+        vec![State::Dead, State::Dead, State::Dead, State::Dead],
+        vec![State::Dead, State::Dead, State::Dead, State::Dead],
+    ];
+}
 
 fn get_neighbor_at(space: &Space, row: usize, column: usize) -> State {
     if *space
@@ -121,14 +149,7 @@ fn main() {
         speed_milliseconds
     });
 
-    let mut space: Space = vec![
-        vec![State::Dead, State::Alive, State::Dead, State::Dead],
-        vec![State::Dead, State::Dead, State::Alive, State::Dead],
-        vec![State::Alive, State::Alive, State::Alive, State::Dead],
-        vec![State::Dead, State::Dead, State::Dead, State::Dead],
-        vec![State::Dead, State::Dead, State::Dead, State::Dead],
-        vec![State::Dead, State::Dead, State::Dead, State::Dead],
-    ];
+    let mut space: Space = gen_space(args.random);
 
     let mut i = 1;
     loop {

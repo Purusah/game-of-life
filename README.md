@@ -1,7 +1,10 @@
 # Game Of Life
 
+Terminal based Game Of Life implementation with custom input and configurable evolution speed.
+
 TODO:
 * Custom input cursor jump over delimiter
+* Custom input configurable space size
 * colorful output
 * nicer cells
 * `Space` with `impl`

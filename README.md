@@ -2,14 +2,8 @@
 
 Terminal based Game Of Life implementation with custom input and configurable evolution speed.
 
-TODO:
-* Custom input cursor jump over delimiter
-* Custom input configurable space size
-* colorful output
-* nicer cells
-* `Space` with `impl`
+## Run
 
-Run
 ```shell
 cargo run
 
@@ -22,3 +16,12 @@ OPTIONS:
     -r, --random                  Random basic configuration
         --speed <MILLISECONDS>    Generation speed in milliseconds
 ```
+Random configuration flag has higher priority than custom one.
+
+## TODO
+
+* Custom input cursor jump over delimiter
+* Custom input configurable space size
+* colorful output
+* nicer cells
+* `Space` with `impl`

@@ -1,5 +1,3 @@
-use rand::random;
-
 #[derive(Clone, Copy, PartialEq)]
 pub enum State {
     Alive = 1,
@@ -7,30 +5,6 @@ pub enum State {
 }
 
 pub type Space = Vec<Vec<State>>;
-
-pub fn gen_space(is_random: bool) -> Space {
-    if is_random {
-        // let mut next_space: Space = ;
-        let height = 12;
-        let width = 12;
-        let mut space: Space = vec![vec![State::Dead; width]; height];
-        for r in 0..height {
-            for c in 0..width {
-                space[r][c] = if random() { State::Alive } else { State::Dead };
-            }
-        }
-        return space;
-    }
-
-    return vec![
-        vec![State::Dead, State::Alive, State::Dead, State::Dead],
-        vec![State::Dead, State::Dead, State::Alive, State::Dead],
-        vec![State::Alive, State::Alive, State::Alive, State::Dead],
-        vec![State::Dead, State::Dead, State::Dead, State::Dead],
-        vec![State::Dead, State::Dead, State::Dead, State::Dead],
-        vec![State::Dead, State::Dead, State::Dead, State::Dead],
-    ];
-}
 
 fn get_neighbor_at(space: &Space, row: usize, column: usize) -> State {
     if *space

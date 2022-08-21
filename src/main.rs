@@ -1,11 +1,14 @@
 use clap::Parser;
+use gen::Nature;
 use std::{thread, time};
 
+mod gen;
 mod space;
 
 #[derive(Parser)]
 #[clap(about, long_about = None)]
 struct Cli {
+    /// Custom basic configuration
     #[clap(short, long)]
     custom: bool,
 
@@ -13,6 +16,7 @@ struct Cli {
     #[clap(long, value_parser, value_name = "MILLISECONDS")]
     speed: Option<u64>,
 
+    /// Random basic configuration
     #[clap(short, long)]
     random: bool,
 }
@@ -23,9 +27,10 @@ fn render(space: &space::Space) {
     let height = space.len();
     let width = space.first().unwrap().len();
 
+    println!("\r");
     for r in 0..height {
-        print!(" | ");
-        for c in 0..width {
+        print!("|");
+        for c in 0..(width - 1) {
             let t = space.get(r).unwrap().get(c).unwrap();
             if *t == space::State::Alive {
                 print!("▇");
@@ -33,7 +38,7 @@ fn render(space: &space::Space) {
                 print!(" ");
             }
 
-            print!(" | ");
+            print!("|");
         }
         println!();
     }
@@ -49,7 +54,14 @@ fn main() {
         speed_milliseconds
     });
 
-    let mut space: space::Space = space::gen_space(args.random);
+    let nature = if args.random {
+        Nature::Random
+    } else if args.custom {
+        Nature::Custom
+    } else {
+        Nature::Default
+    };
+    let mut space = gen::gen_space(nature);
 
     let mut i = 1;
     loop {

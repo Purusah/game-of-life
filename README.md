@@ -1,7 +1,7 @@
 # Game Of Life
 
 TODO:
-* input board from the terminal
+* Custom input cursor jump over delimiter
 * colorful output
 * nicer cells
 * `Space` with `impl`
@@ -14,8 +14,8 @@ USAGE:
     learn-rust-game-of-life [OPTIONS]
 
 OPTIONS:
+    -c, --custom                  Custom basic configuration
     -h, --help                    Print help information
-    -c, --custom
-    -r, --random
+    -r, --random                  Random basic configuration
         --speed <MILLISECONDS>    Generation speed in milliseconds
 ```

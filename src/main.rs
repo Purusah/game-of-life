@@ -1,10 +1,14 @@
 use clap::Parser;
-use rand::random;
 use std::{thread, time};
+
+mod space;
 
 #[derive(Parser)]
 #[clap(about, long_about = None)]
 struct Cli {
+    #[clap(short, long)]
+    custom: bool,
+
     /// Generation speed in milliseconds
     #[clap(long, value_parser, value_name = "MILLISECONDS")]
     speed: Option<u64>,
@@ -13,111 +17,7 @@ struct Cli {
     random: bool,
 }
 
-#[derive(Clone, Copy, PartialEq)]
-enum State {
-    Alive = 1,
-    Dead = 0,
-}
-
-type Space = Vec<Vec<State>>;
-
-fn gen_space(is_random: bool) -> Space {
-    if is_random {
-        // let mut next_space: Space = ;
-        let height = 12;
-        let width = 12;
-        let mut space: Space = vec![vec![State::Dead; width]; height];
-        for r in 0..height {
-            for c in 0..width {
-                space[r][c] = if random() { State::Alive } else { State::Dead };
-            }
-        }
-        return space;
-    }
-
-    return vec![
-        vec![State::Dead, State::Alive, State::Dead, State::Dead],
-        vec![State::Dead, State::Dead, State::Alive, State::Dead],
-        vec![State::Alive, State::Alive, State::Alive, State::Dead],
-        vec![State::Dead, State::Dead, State::Dead, State::Dead],
-        vec![State::Dead, State::Dead, State::Dead, State::Dead],
-        vec![State::Dead, State::Dead, State::Dead, State::Dead],
-    ];
-}
-
-fn get_neighbor_at(space: &Space, row: usize, column: usize) -> State {
-    if *space
-        .get(row)
-        .unwrap_or(&Vec::new())
-        .get(column)
-        .unwrap_or(&State::Dead)
-        == State::Alive
-    {
-        State::Alive
-    } else {
-        State::Dead
-    }
-}
-
-fn get_next_state(space: &Space, row: usize, column: usize) -> State {
-    let current = *space.get(row).unwrap().get(column).unwrap();
-
-    let right = get_neighbor_at(space, row, column + 1) as usize;
-    let down_right = get_neighbor_at(space, row + 1, column + 1) as usize;
-    let down = get_neighbor_at(space, row + 1, column) as usize;
-
-    let mut down_left: usize = 0;
-    let mut left: usize = 0;
-    let mut up_left: usize = 0;
-    let mut up: usize = 0;
-    let mut up_right: usize = 0;
-
-    if column > 0 {
-        down_left = get_neighbor_at(space, row + 1, column - 1) as usize;
-        left = get_neighbor_at(space, row, column - 1) as usize;
-    }
-
-    if row > 0 {
-        up = get_neighbor_at(space, row - 1, column) as usize;
-        up_right = get_neighbor_at(space, row - 1, column + 1) as usize
-    }
-
-    if row > 0 && column > 0 {
-        up_left = get_neighbor_at(space, row - 1, column - 1) as usize;
-    }
-
-    let neighbors = up_left + up + up_right + right + down_right + down + down_left + left;
-    if current == State::Alive {
-        if neighbors <= 1 {
-            return State::Dead;
-        } else if neighbors <= 3 {
-            return State::Alive;
-        } else {
-            return State::Dead;
-        }
-    } else {
-        if neighbors == 3 {
-            return State::Alive;
-        }
-        return State::Dead;
-    }
-}
-
-fn evaluate(space: &Space) -> Space {
-    let height = space.len();
-    let width = space.first().unwrap().len();
-    let mut next_space: Space = vec![vec![State::Dead; width]; height];
-
-    for r in 0..height {
-        for c in 0..width {
-            next_space[r][c] = get_next_state(space, r, c);
-        }
-    }
-
-    return next_space;
-}
-
-fn render(space: &Space) {
+fn render(space: &space::Space) {
     print!("{esc}c", esc = 27 as char); // clean previous output
 
     let height = space.len();
@@ -127,7 +27,7 @@ fn render(space: &Space) {
         print!(" | ");
         for c in 0..width {
             let t = space.get(r).unwrap().get(c).unwrap();
-            if *t == State::Alive {
+            if *t == space::State::Alive {
                 print!("▇");
             } else {
                 print!(" ");
@@ -149,14 +49,14 @@ fn main() {
         speed_milliseconds
     });
 
-    let mut space: Space = gen_space(args.random);
+    let mut space: space::Space = space::gen_space(args.random);
 
     let mut i = 1;
     loop {
         i += 1;
 
         render(&space);
-        space = evaluate(&space);
+        space = space::evaluate(&space);
         println!("{} iter", i);
 
         thread::sleep(five_hundred_millisecond);

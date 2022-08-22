@@ -24,14 +24,14 @@ struct Cli {
 fn render(space: &space::Space) {
     print!("{esc}c", esc = 27 as char); // clean previous output
 
-    let height = space.len();
-    let width = space.first().unwrap().len();
+    let height = space.size();
+    let width = space.field.first().unwrap().len();
 
     println!("\r");
     for r in 0..height {
         print!("|");
         for c in 0..(width - 1) {
-            let t = space.get(r).unwrap().get(c).unwrap();
+            let t = space.field.get(r).unwrap().get(c).unwrap();
             if *t == space::State::Alive {
                 print!("▇");
             } else {

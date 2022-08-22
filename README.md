@@ -23,4 +23,3 @@ Random configuration flag has higher priority than custom one.
 * Custom input configurable space size
 * colorful output
 * nicer cells
-* `Space` with `impl`

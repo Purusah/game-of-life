@@ -29,10 +29,10 @@ impl Input {
     fn init() -> Self {
         let height = 16;
         let width = 16;
-        let mut space: Space = vec![vec![State::Dead; width]; height];
+        let mut space: Space = Space::init(vec![vec![State::Dead; width]; height]);
         for r in 0..height {
             for c in 0..width {
-                space[r][c] = State::Dead;
+                space.field[r][c] = State::Dead;
             }
         }
 
@@ -91,9 +91,9 @@ impl Input {
             return;
         }
 
-        let cell = self.state[self.cursor.y - 1][self.cursor.x / 2 - 1];
+        let cell = self.state.field[self.cursor.y - 1][self.cursor.x / 2 - 1];
 
-        self.state[self.cursor.y - 1][self.cursor.x / 2 - 1] = if cell == State::Dead {
+        self.state.field[self.cursor.y - 1][self.cursor.x / 2 - 1] = if cell == State::Dead {
             State::Alive
         } else {
             State::Dead
@@ -154,7 +154,7 @@ impl Input {
         );
         for r in 0..self.size.y {
             for c in 0..self.size.x {
-                if self.state[r][c] == State::Dead {
+                if self.state.field[r][c] == State::Dead {
                     print!("| ");
                 } else {
                     print!("|▇");
@@ -169,23 +169,23 @@ impl Input {
 
 pub fn gen_space(nature: Nature) -> Space {
     if nature == Nature::Default {
-        return vec![
+        return Space::init(vec![
             vec![State::Dead, State::Alive, State::Dead, State::Dead],
             vec![State::Dead, State::Dead, State::Alive, State::Dead],
             vec![State::Alive, State::Alive, State::Alive, State::Dead],
             vec![State::Dead, State::Dead, State::Dead, State::Dead],
             vec![State::Dead, State::Dead, State::Dead, State::Dead],
             vec![State::Dead, State::Dead, State::Dead, State::Dead],
-        ];
+        ]);
     }
 
     if nature == Nature::Random {
         let height = 16;
         let width = 16;
-        let mut space: Space = vec![vec![State::Dead; width]; height];
+        let mut space: Space = Space::init(vec![vec![State::Dead; width]; height]);
         for r in 0..height {
             for c in 0..width {
-                space[r][c] = if random() { State::Alive } else { State::Dead };
+                space.field[r][c] = if random() { State::Alive } else { State::Dead };
             }
         }
         return space;

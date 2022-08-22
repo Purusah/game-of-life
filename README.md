@@ -5,7 +5,7 @@ Terminal based Game Of Life implementation with custom input and configurable ev
 ## Run
 
 ```shell
-cargo run
+cargo run -- --help
 
 USAGE:
     learn-rust-game-of-life [OPTIONS]

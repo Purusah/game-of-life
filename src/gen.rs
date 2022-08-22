@@ -37,7 +37,7 @@ impl Input {
         }
 
         Self {
-            cursor: Cursor { x: 1, y: 1 },
+            cursor: Cursor { x: 2, y: 1 },
             size: Cursor {
                 x: width,
                 y: height,
@@ -47,8 +47,8 @@ impl Input {
     }
 
     fn inc_x(&mut self) {
-        if self.cursor.x < 2 * self.size.x - 1 {
-            self.cursor.x += 1;
+        if self.cursor.x < 2 * self.size.x - 2 {
+            self.cursor.x += 2;
         }
         println!(
             "{}",
@@ -57,8 +57,8 @@ impl Input {
     }
 
     fn dec_x(&mut self) {
-        if self.cursor.x > 1 {
-            self.cursor.x -= 1;
+        if self.cursor.x > 2 {
+            self.cursor.x -= 2;
         }
         println!(
             "{}",

@@ -20,7 +20,6 @@ Random configuration flag has higher priority than custom one.
 
 ## TODO
 
-* Custom input cursor jump over delimiter
 * Custom input configurable space size
 * colorful output
 * nicer cells

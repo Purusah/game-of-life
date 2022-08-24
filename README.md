@@ -21,5 +21,4 @@ Random configuration flag has higher priority than custom one.
 ## TODO
 
 * colorful output
-* nicer cells
 * hide `Space.field` and use [Index](https://doc.rust-lang.org/std/ops/trait.Index.html) and IndexMut traits

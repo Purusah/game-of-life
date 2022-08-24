@@ -26,28 +26,23 @@ struct Input {
 }
 
 impl Input {
-    fn init() -> Self {
-        let height = 16;
-        let width = 16;
-        let mut space: Space = Space::init(vec![vec![State::Dead; width]; height]);
-        for r in 0..height {
-            for c in 0..width {
+    fn init(dim: usize) -> Self {
+        let mut space: Space = Space::init(vec![vec![State::Dead; dim]; dim]);
+        for r in 0..dim {
+            for c in 0..dim {
                 space.field[r][c] = State::Dead;
             }
         }
 
         Self {
             cursor: Cursor { x: 2, y: 1 },
-            size: Cursor {
-                x: width,
-                y: height,
-            },
+            size: Cursor { x: dim, y: dim },
             state: space,
         }
     }
 
     fn inc_x(&mut self) {
-        if self.cursor.x < 2 * self.size.x - 2 {
+        if self.cursor.x < 2 * self.size.x {
             self.cursor.x += 2;
         }
         println!(
@@ -160,38 +155,34 @@ impl Input {
                     print!("|▇");
                 }
             }
-            println!("\r");
+            println!("|\r");
         }
 
         self.set_cursor(old_x, old_y);
     }
 }
 
-pub fn gen_space(nature: Nature) -> Space {
+pub fn gen_space(nature: Nature, dim: usize) -> Space {
     if nature == Nature::Default {
         return Space::init(vec![
             vec![State::Dead, State::Alive, State::Dead, State::Dead],
             vec![State::Dead, State::Dead, State::Alive, State::Dead],
             vec![State::Alive, State::Alive, State::Alive, State::Dead],
             vec![State::Dead, State::Dead, State::Dead, State::Dead],
-            vec![State::Dead, State::Dead, State::Dead, State::Dead],
-            vec![State::Dead, State::Dead, State::Dead, State::Dead],
         ]);
     }
 
     if nature == Nature::Random {
-        let height = 16;
-        let width = 16;
-        let mut space: Space = Space::init(vec![vec![State::Dead; width]; height]);
-        for r in 0..height {
-            for c in 0..width {
+        let mut space: Space = Space::init(vec![vec![State::Dead; dim]; dim]);
+        for r in 0..dim {
+            for c in 0..dim {
                 space.field[r][c] = if random() { State::Alive } else { State::Dead };
             }
         }
         return space;
     }
 
-    let mut input = Input::init();
+    let mut input = Input::init(dim);
     input.show_document();
     input.run();
 

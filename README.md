@@ -11,15 +11,15 @@ USAGE:
     learn-rust-game-of-life [OPTIONS]
 
 OPTIONS:
-    -c, --custom                  Custom basic configuration
+    -c, --custom <NUMBER>         Custom basic configuration
     -h, --help                    Print help information
-    -r, --random                  Random basic configuration
+    -r, --random <NUMBER>         Random basic configuration
         --speed <MILLISECONDS>    Generation speed in milliseconds
 ```
 Random configuration flag has higher priority than custom one.
 
 ## TODO
 
-* Custom input configurable space size
 * colorful output
 * nicer cells
+* hide `Space.field` and use [Index](https://doc.rust-lang.org/std/ops/trait.Index.html) and IndexMut traits

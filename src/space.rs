@@ -28,7 +28,7 @@ impl Space {
         }
     }
 
-    pub fn get_next_state(&self, row: usize, column: usize) -> State {
+    fn get_next_state(&self, row: usize, column: usize) -> State {
         let current = *self.field.get(row).unwrap().get(column).unwrap();
 
         let right = self.get_neighbor_at(row, column + 1) as usize;
@@ -72,18 +72,17 @@ impl Space {
         }
     }
 
-    pub fn size(&self) -> usize {
+    pub fn dim(&self) -> usize {
         self.field.len()
     }
 }
 
 pub fn evaluate(space: &Space) -> Space {
-    let height = space.field.len();
-    let width = space.field.first().unwrap().len();
-    let mut next_space: Space = Space::init(vec![vec![State::Dead; width]; height]);
+    let dim = space.dim();
+    let mut next_space: Space = Space::init(vec![vec![State::Dead; dim]; dim]);
 
-    for r in 0..height {
-        for c in 0..width {
+    for r in 0..dim {
+        for c in 0..dim {
             next_space.field[r][c] = space.get_next_state(r, c);
         }
     }

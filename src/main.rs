@@ -8,29 +8,28 @@ mod space;
 #[derive(Parser)]
 #[clap(about, long_about = None)]
 struct Cli {
-    /// Custom basic configuration
-    #[clap(short, long)]
-    custom: bool,
+    /// Custom basic configuration size
+    #[clap(short, long, value_name = "NUMBER")]
+    custom: Option<usize>,
+
+    /// Random basic configuration size
+    #[clap(short, long, value_parser, value_name = "NUMBER")]
+    random: Option<usize>,
 
     /// Generation speed in milliseconds
     #[clap(long, value_parser, value_name = "MILLISECONDS")]
     speed: Option<u64>,
-
-    /// Random basic configuration
-    #[clap(short, long)]
-    random: bool,
 }
 
 fn render(space: &space::Space) {
     print!("{esc}c", esc = 27 as char); // clean previous output
 
-    let height = space.size();
-    let width = space.field.first().unwrap().len();
+    let dim = space.dim();
 
     println!("\r");
-    for r in 0..height {
+    for r in 0..dim {
         print!("|");
-        for c in 0..(width - 1) {
+        for c in 0..dim {
             let t = space.field.get(r).unwrap().get(c).unwrap();
             if *t == space::State::Alive {
                 print!("▇");
@@ -54,14 +53,23 @@ fn main() {
         speed_milliseconds
     });
 
-    let nature = if args.random {
+    let mut dim = 0;
+    let nature = if args.random.is_some() {
+        dim = args.random.unwrap();
         Nature::Random
-    } else if args.custom {
+    } else if args.custom.is_some() {
+        dim = args.custom.unwrap();
         Nature::Custom
     } else {
         Nature::Default
     };
-    let mut space = gen::gen_space(nature);
+
+    if dim == 0 {
+        println!("Ha-ha, but no.");
+        return;
+    }
+
+    let mut space = gen::gen_space(nature, dim);
 
     let mut i = 1;
     loop {
